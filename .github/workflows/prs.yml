@@ -19,17 +19,18 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://npm.pkg.github.com/
+          scope: '@basisboard'
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12
-        registry-url: https://npm.pkg.github.com/
-        scope: '@basisboard'
-        
-    - name: Install Dependencies
-      run: make deps
+      - name: Install Dependencies
+      - uses: borales/actions-yarn@v2.0.0
+        run: make deps
 
-    # Runs a single command using the runners shell
-    - name: Run tests
-      run: make test
+      # Runs a single command using the runners shell
+      - name: Run tests
+      - uses: borales/actions-yarn@v2.0.0
+        run: make test
