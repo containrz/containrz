@@ -1,24 +1,17 @@
 {
   "name": "containrz",
-  "version": "0.0.5",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "version": "0.0.1",
   "type": "module",
   "license": "MIT",
   "repository": {
-    "url": "https://github.com/nicreichert/containrz"
+    "url": "https://github.com/containrz/containrz"
   },
   "author": {
     "name": "Nic Reichert",
     "url": "https://github.com/nicreichert"
   },
-  "scripts": {
-    "start": "tsc -w --p tsconfig.build.json",
-    "build": "rm -rf dist && tsc",
-    "test": "jest",
-    "test:watch": "jest --watch"
-  },
   "dependencies": {
+    "lerna": "^3.22.1",
     "react": "^16.12.0",
     "rxjs": "^6.5.2",
     "utility-types": "^3.7.0"
@@ -42,14 +35,7 @@
     "jest-localstorage-mock": "^2.4.2",
     "prettier": "^1.18.2",
     "prettier-standard": "^9.1.1",
-    "react-hooks-testing-library": "^0.5.0",
-    "react-test-renderer": "^16.8.6",
     "ts-jest": "^24.0.2",
     "typescript": "^3.4.4"
-  },
-  "jest": {
-    "setupFiles": [
-      "jest-localstorage-mock"
-    ]
   }
 }
