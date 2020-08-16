@@ -35,7 +35,7 @@ export const clearContainers = () => {
 export const subscribeListener = (
   container: ContainerType<any>,
   listener: () => void,
-  deleteOnUnmount?: boolean
+  deleteOnUnsubscribe?: boolean
 ) => {
   const emitter = getEmitter(container)
   const sub = emitter.subscribe(listener)
@@ -43,7 +43,7 @@ export const subscribeListener = (
   return () => {
     sub.unsubscribe()
 
-    if (deleteOnUnmount) {
+    if (deleteOnUnsubscribe) {
       emittersMap.delete(container)
     }
   }

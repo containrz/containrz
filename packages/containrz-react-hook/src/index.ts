@@ -7,14 +7,16 @@ export function useContainer<C extends ContainerType>(
   container: C | Class<C>,
   deleteOnUnmount?: boolean
 ): C {
-  const [, forceUpdate] = useState(0)
+  const [, forceUpdate] = useState(false)
   const instance = isInstanceOfContainer(container)
     ? (container as C)
     : (findContainer(container as Class<C>) as C)
 
-  useEffect(() => subscribeListener(instance, () => forceUpdate(c => c + 1), deleteOnUnmount), [
-    instance,
-  ])
+  useEffect(() => {
+    const unsubscribe = subscribeListener(instance, () => forceUpdate(c => !c), deleteOnUnmount)
+
+    return unsubscribe
+  }, [instance])
 
   return instance
 }
