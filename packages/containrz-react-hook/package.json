@@ -16,9 +16,9 @@
     "build": "rm -rf dist && tsc"
   },
   "dependencies": {
-    "@containrz/core": "0.0.1",
-    "@containrz/types": "0.0.1",
-    "react": "^16.12.0",
+    "@containrz/core": "0.1.0",
+    "@containrz/types": "0.1.0",
+    "react": "^16.13.1",
     "react-hooks-testing-library": "^0.5.0",
     "utility-types": "^3.7.0"
   },

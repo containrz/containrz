@@ -16,7 +16,7 @@ export function useContainer<C extends ContainerType>(
     const unsubscribe = subscribeListener(instance, () => forceUpdate(c => !c), deleteOnUnmount)
 
     return unsubscribe
-  }, [instance])
+  }, [instance, forceUpdate])
 
   return instance
 }

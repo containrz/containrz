@@ -13,9 +13,17 @@ build:
 	cd packages/containrz-container-local-storage && $(YARN) build
 	cd packages/containrz-react-hook && $(YARN) build
 
-.PHONY: version/bump
-version/bump:
+.PHONY: bump/patch
+bump/patch:
 	$(YARN) lerna version patch
+
+.PHONY: bump/minor
+bump/minor:
+	$(YARN) lerna version minor
+
+.PHONY: bump/major
+bump/major:
+	$(YARN) lerna version major
 
 .PHONY: test
 test:
