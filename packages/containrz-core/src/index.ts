@@ -44,13 +44,20 @@ export const subscribeListener = (
     sub.unsubscribe()
 
     if (deleteOnUnsubscribe) {
+      container.destroy()
       emittersMap.delete(container)
     }
   }
 }
 
-export function getContainer<C extends ContainerType>(container: C | Class<C>): C {
-  return isInstanceOfContainer(container)
+export const deleteContainer = <C extends ContainerType>(container: C | Class<C>) => {
+  const c = isInstanceOfContainer(container)
     ? (container as C)
-    : (findContainer(container as Class<C>) as C)
+    : findContainer(container as Class<C>)
+
+  emittersMap.delete(c)
+  c.destroy()
 }
+
+export const getContainer = <C extends ContainerType>(container: C | Class<C>): C =>
+  isInstanceOfContainer(container) ? (container as C) : (findContainer(container as Class<C>) as C)
