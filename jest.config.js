@@ -3,4 +3,5 @@ module.exports = {
   testEnvironment: 'node',
   transform: { '\\.ts$': ['ts-jest'] },
   setupFiles: ['jest-localstorage-mock'],
+  modulePathIgnorePatterns: ['<rootDir>/demos'],
 }
