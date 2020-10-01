@@ -1,0 +1,26 @@
+{
+  "name": "@containrz/core",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/containrz/containrz"
+  },
+  "author": {
+    "name": "Nic Reichert",
+    "url": "https://github.com/nicreichert"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc"
+  },
+  "dependencies": {
+    "@containrz/types": "0.1.0",
+    "rxjs": "^6.5.2",
+    "utility-types": "^3.7.0"
+  },
+  "devDependencies": {
+    "typescript": "^3.4.4"
+  }
+}
