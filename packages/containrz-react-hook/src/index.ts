@@ -20,3 +20,6 @@ export function useContainer<C extends ContainerType>(
 
   return instance
 }
+
+export * from '@containrz/core'
+export * from '@containrz/types'

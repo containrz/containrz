@@ -23,7 +23,7 @@ export const findContainer = <C>(c: Class<ContainerType<any>>): ContainerType<C>
 }
 
 export const clearContainers = () => {
-  Array.from(containersMap.keys()).map(key => {
+  Array.from(containersMap.keys()).forEach(key => {
     const container = getContainer(key)
     container.destroy()
   })
@@ -61,3 +61,19 @@ export const deleteContainer = <C extends ContainerType>(container: C | Class<C>
 
 export const getContainer = <C extends ContainerType>(container: C | Class<C>): C =>
   isInstanceOfContainer(container) ? (container as C) : (findContainer(container as Class<C>) as C)
+
+export class Container<State = any> {
+  public state!: State
+
+  public setState = (updater: Partial<State> | ((prevState: State) => Partial<State> | null)) => {
+    const nextState = updater instanceof Function ? updater(this.state) : updater
+    if (nextState) {
+      this.state =
+        nextState instanceof Object ? Object.assign({}, this.state, nextState) : nextState
+
+      getEmitter(this).next(0)
+    }
+  }
+
+  public destroy = () => {}
+}

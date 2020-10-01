@@ -18,12 +18,16 @@
   "dependencies": {
     "@containrz/core": "0.1.0",
     "@containrz/types": "0.1.0",
+    "@types/react": "^16.9.0",
     "react": "^16.13.1",
-    "react-hooks-testing-library": "^0.5.0",
     "utility-types": "^3.7.0"
+  },
+  "peerDependencies": {
+    "react": ">= 16.8.0"
   },
   "devDependencies": {
     "@testing-library/react-hooks": "^3.4.1",
+    "react-hooks-testing-library": "^0.5.0",
     "react-test-renderer": "^16.13.1",
     "typescript": "^3.4.4"
   }

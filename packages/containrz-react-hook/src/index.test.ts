@@ -1,6 +1,5 @@
 import { renderHook, act } from '@testing-library/react-hooks'
-import { clearContainers } from '@containrz/core'
-import { Container } from '../../containrz-container'
+import { clearContainers, Container } from '@containrz/core'
 import { LocalStorageContainer } from '../../containrz-container-local-storage'
 import { useContainer } from './'
 
@@ -64,13 +63,7 @@ describe('`useContainer` tests', () => {
   })
 
   afterAll(() => {
-    // values stored in tests will also be available in other tests unless you run
     localStorage.clear()
-    // or directly reset the storage
-    localStorage.__STORE__ = {}
-    // you could also reset all mocks, but this could impact your other mocks
-    jest.resetAllMocks()
-    // or individually reset a mock used
   })
 
   it('Sets num', () => {

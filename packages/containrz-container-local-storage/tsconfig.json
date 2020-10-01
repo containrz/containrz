@@ -1,25 +1,12 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
     "module": "commonjs",
-    "target": "es5",
-    "lib": ["es6", "dom", "esnext.asynciterable", "esnext"],
     "moduleResolution": "node",
-    "rootDir": "src",
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitThis": true,
-    "noImplicitAny": true,
-    "importHelpers": true,
-    "strictNullChecks": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
-    "declaration": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "resolveJsonModule": true
+    "target": "es5",
+    "outDir": "./dist",
+    "lib": ["es5", "es2015", "dom"],
+    "declaration": true
   },
-  "exclude": ["node_modules", "build", "**/*.test.ts"],
-  "include": ["src"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts"]
 }
