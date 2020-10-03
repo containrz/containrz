@@ -94,7 +94,7 @@ export const App = () => {
 
 ## Other ways to store your state
 
-`containrz` also allows you to use different base `Containers` to store your states. Read more about it in the subprojects:
+`containrz` also allows you to use different base `Containers` to store your states in other ways. Read more about it in the subprojects:
 
 - [@containrz/container-local-storage](../containrz-container-local-storage)
 - [@containrz/container-indexeddb](../containrz-container-indexeddb)
