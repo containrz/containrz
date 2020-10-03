@@ -4,6 +4,7 @@ export interface ContainerType<T = any> {
   setState: (updater: Partial<T> | ((prevState: T) => Partial<T> | null)) => void
   state: T
   destroy: () => void
+  __destroyInternalCleanup?: () => void
 }
 
 export const isInstanceOfContainer = <C extends ContainerType>(container: C | Class<C>): boolean =>

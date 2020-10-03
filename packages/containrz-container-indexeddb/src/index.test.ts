@@ -1,4 +1,6 @@
 import { IndexedDBContainer } from '.'
+import 'fake-indexeddb/auto'
+import { createInstance, dropInstance, INDEXEDDB, WEBSQL, LOCALSTORAGE } from 'localforage'
 
 interface ObjectContainerState {
   name: string
@@ -12,10 +14,8 @@ const defaultState = {
   items: [] as string[],
 }
 
-class ObjectContainerLocalStorage extends IndexedDBContainer<ObjectContainerState> {
-  constructor() {
-    super(defaultState)
-  }
+class ObjectContainerIndexedDb extends IndexedDBContainer<ObjectContainerState> {
+  state = defaultState
 
   public setName = (name: string) => this.setState({ name })
 
@@ -26,6 +26,8 @@ class ObjectContainerLocalStorage extends IndexedDBContainer<ObjectContainerStat
 
 const next = jest.fn()
 
+const flushPromises = () => new Promise(setImmediate)
+
 jest.mock('@containrz/core', () => ({
   getEmitter: (v: any) => ({
     next,
@@ -34,40 +36,40 @@ jest.mock('@containrz/core', () => ({
 
 describe('Test `IndexedDBContainer` class', () => {
   it('Should create container with default state', () => {
-    const container = new ObjectContainerLocalStorage()
+    const container = new ObjectContainerIndexedDb()
 
     expect(container.state).toEqual(defaultState)
   })
 
-  it('Should set container state values and store on localStorage', () => {
-    const container = new ObjectContainerLocalStorage()
+  it('Should set container state values and store on localStorage', async () => {
+    const container = new ObjectContainerIndexedDb()
+    const dbInstance = createInstance({ name: 'ObjectContainerIndexedDb' })
 
+    // Age
     const newAge = 25
     container.setAge(25)
+    await flushPromises()
+    const storedAge = await dbInstance.getItem('age')
 
-    expect(next).toBeCalledTimes(1)
     expect(container.state.age).toEqual(newAge)
-    // expect(localStorage.getItem('ObjectContainerLocalStorage-age')).toBe(JSON.stringify(newAge))
+    expect(storedAge).toBe(newAge)
 
-    next.mockClear()
-
+    // Name
     const newName = 'Nic'
     container.setName(newName)
+    await flushPromises()
+    const storedName = await dbInstance.getItem('name')
 
-    expect(next).toBeCalledTimes(1)
     expect(container.state.name).toEqual(newName)
-    // expect(localStorage.getItem('ObjectContainerLocalStorage-name')).toBe(JSON.stringify(newName))
+    expect(storedName).toEqual(newName)
 
-    next.mockClear()
-
+    // Items
     const newItem = 'Ball'
     container.addItem(newItem)
+    await flushPromises()
+    const storedItems = await dbInstance.getItem('items')
 
-    expect(next).toBeCalledTimes(1)
     expect(container.state.items).toEqual([newItem])
-
-    // expect(localStorage.getItem('ObjectContainerLocalStorage-items')).toBe(
-    // JSON.stringify([newItem])
-    // )
+    expect(storedItems).toEqual([newItem])
   })
 })

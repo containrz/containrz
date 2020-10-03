@@ -26,6 +26,7 @@ export const clearContainers = () => {
   Array.from(containersMap.keys()).forEach(key => {
     const container = getContainer(key)
     container.destroy()
+    container.__destroyInternalCleanup && container.__destroyInternalCleanup()
   })
 
   containersMap.clear()
@@ -45,6 +46,7 @@ export const subscribeListener = (
 
     if (deleteOnUnsubscribe) {
       container.destroy()
+      container.__destroyInternalCleanup && container.__destroyInternalCleanup()
       emittersMap.delete(container)
     }
   }

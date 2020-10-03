@@ -6,29 +6,29 @@ export class IndexedDBContainer<State = any> {
 
   private instance: LocalForage
 
-  constructor(state: State) {
+  constructor() {
     this.instance = createInstance({
       name: this.constructor.name,
       driver: [INDEXEDDB, WEBSQL, LOCALSTORAGE],
     })
 
-    this.state = state
-
     this.instance.keys(async (_, keys) => {
-      if (keys.length !== Object.keys(state).length) {
+      // when there are new values not yet stored, store default value
+      if (keys.length !== Object.keys(this.state).length) {
         this.setItems(
-          Object.keys(state)
+          Object.keys(this.state)
             .filter(key => !keys.some(k => k === key))
             .reduce(
               (acc, key) => ({
                 ...acc,
-                [key]: state[key],
+                [key]: this.state[key],
               }),
               {}
             )
         )
       }
 
+      // when first time container is created, no need to load state
       if (keys.length === 0) {
         return
       }
@@ -42,7 +42,7 @@ export class IndexedDBContainer<State = any> {
         )
       )
 
-      this.state = Object.assign({}, state, storedState) as State
+      this.state = Object.assign({}, this.state, storedState) as State
       getEmitter(this).next(0)
     })
   }
@@ -64,7 +64,11 @@ export class IndexedDBContainer<State = any> {
       this.instance.setItem(key, state[key])
     })
 
-  public destroy = () =>
+  public destroy = () => {}
+
+  public __destroyInternalCleanup = () => this.clearDB()
+
+  public clearDB = () =>
     dropInstance({
       name: this.constructor.name,
     })
