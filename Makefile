@@ -4,19 +4,19 @@ NPX := npx
 
 .PHONY: deps
 deps:
-	$(NPX) lerna bootstrap
+	${YARN} lerna bootstrap
 
 .PHONY: bump/patch
 bump/patch:
-	$(NPX) lerna version patch
+	${YARN} lerna version patch
 
 .PHONY: bump/minor
 bump/minor:
-	$(NPX) lerna version minor
+	${YARN} lerna version minor
 
 .PHONY: bump/major
 bump/major:
-	$(NPX) lerna version major
+	${YARN} lerna version major
 
 .PHONY: test
 test:
@@ -33,6 +33,7 @@ build:
 	cd packages/containrz-container-local-storage && $(YARN) build
 	cd packages/containrz-container-indexeddb && $(YARN) build
 	cd packages/containrz-react-hook && $(YARN) build
+	cd packages/containrz-stencil-decorator && $(YARN) build
 
 .PHONY: publish
 publish:
@@ -43,3 +44,4 @@ publish:
 	cd packages/containrz-container-local-storage && $(NPM) publish
 	cd packages/containrz-container-indexeddb && $(NPM) publish
 	cd packages/containrz-react-hook && $(NPM) publish
+	cd packages/containrz-stencil-decorator && $(NPM) publish
