@@ -1,6 +1,6 @@
 import { IndexedDBContainer } from '.'
 import 'fake-indexeddb/auto'
-import { createInstance, dropInstance, INDEXEDDB, WEBSQL, LOCALSTORAGE } from 'localforage'
+import { createInstance } from 'localforage'
 
 interface ObjectContainerState {
   name: string
