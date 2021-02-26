@@ -16,7 +16,6 @@
     "build": "rm -rf dist && tsc"
   },
   "dependencies": {
-    "@containrz/types": "0.1.0",
     "rxjs": "^6.5.2",
     "utility-types": "^3.7.0"
   },

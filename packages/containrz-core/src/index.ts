@@ -1,6 +1,16 @@
-import { isInstanceOfContainer, ContainerType } from '@containrz/types'
 import { BehaviorSubject } from 'rxjs'
 import { Class } from 'utility-types'
+
+export interface ContainerType<T = any> {
+  setState: (updater: Partial<T> | ((prevState: T) => Partial<T> | null)) => void
+  state: T
+  destroy: () => void
+  __destroyInternalCleanup?: () => void
+}
+
+export const isInstanceOfContainer = <C extends ContainerType>(container: C | Class<C>): boolean =>
+  (container as ContainerType).setState !== undefined &&
+  (container as ContainerType).state !== undefined
 
 export const emittersMap = new Map<ContainerType<any>, BehaviorSubject<any>>()
 
@@ -36,7 +46,7 @@ export const clearContainers = () => {
 export const subscribeListener = (
   container: ContainerType<any>,
   listener: () => void,
-  deleteOnUnsubscribe?: boolean
+  deleteOnUnsubscribe?: boolean,
 ) => {
   const emitter = getEmitter(container)
   const sub = emitter.subscribe(listener)

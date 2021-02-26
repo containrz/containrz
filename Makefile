@@ -28,7 +28,6 @@ test/watch:
 
 .PHONY: build
 build:
-	cd packages/containrz-types && $(YARN) build
 	cd packages/containrz-core && $(YARN) build
 	cd packages/containrz-container-local-storage && $(YARN) build
 	cd packages/containrz-container-indexeddb && $(YARN) build
@@ -39,7 +38,6 @@ build:
 publish:
 	${MAKE} version/bump
 	${MAKE} build
-	cd packages/containrz-types && $(NPM) publish
 	cd packages/containrz-core && $(NPM) publish
 	cd packages/containrz-container-local-storage && $(NPM) publish
 	cd packages/containrz-container-indexeddb && $(NPM) publish
