@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@containrz/core": "0.1.0",
-    "@containrz/types": "0.1.0",
     "utility-types": "^3.7.0"
   },
   "peerDependencies": {

@@ -1,11 +1,15 @@
 import { Class } from 'utility-types'
 import { useEffect, useState } from 'react'
-import { subscribeListener, findContainer } from '@containrz/core'
-import { ContainerType, isInstanceOfContainer } from '@containrz/types'
+import {
+  subscribeListener,
+  findContainer,
+  ContainerType,
+  isInstanceOfContainer,
+} from '@containrz/core'
 
 export function useContainer<C extends ContainerType>(
   container: C | Class<C>,
-  deleteOnUnmount?: boolean
+  deleteOnUnmount?: boolean,
 ): C {
   const [, forceUpdate] = useState(false)
   const instance = isInstanceOfContainer(container)
@@ -22,4 +26,3 @@ export function useContainer<C extends ContainerType>(
 }
 
 export * from '@containrz/core'
-export * from '@containrz/types'
