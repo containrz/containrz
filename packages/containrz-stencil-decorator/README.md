@@ -7,7 +7,7 @@
 In order to use `@containrz/stencil-decorator`, you need to create a class that extends `Container`, provided on the package.
 
 ```js
-import { Container } from '@containrz/core'
+import { Container } from '@containrz/stencil-decorator'
 
 interface User {
   name: string
@@ -35,7 +35,7 @@ export class UserContainer extends Container<User> {
 Once you have your container, you can now start sharing its state:
 
 ```js
-import * as React from 'react'
+import { Component, VNode } from '@stencil/core'
 import { UseContainer } from '@containrz/stencil-decorator'
 import { UserContainer } from './UserContainer'
 
@@ -60,10 +60,3 @@ export class MyComponent {
   }
 }
 ```
-
-## Other ways to store your state
-
-`containrz` also allows you to use different base `Containers` to store your states in other ways. Read more about it in the subprojects:
-
-- [@containrz/container-local-storage](../containrz-container-local-storage)
-- [@containrz/container-indexeddb](../containrz-container-indexeddb)

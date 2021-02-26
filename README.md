@@ -4,6 +4,7 @@
 
 - [containrz/core](./packages/containrz-core)
 - [containrz/react-hook](./packages/containrz-react-hook)
+- [containrz/container-stencil-decorator](./packages/containrz-stencil-decorator)
 - [containrz/container-indexeddb](./packages/containrz-container-indexeddb)
 - [containrz/container-local-storage](./packages/containrz-container-local-storage)
 
