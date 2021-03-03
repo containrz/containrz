@@ -1,0 +1,30 @@
+{
+  "name": "@containrz/container-native-local-storage",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "url": "https://github.com/containrz/containrz"
+  },
+  "author": {
+    "name": "Nic Reichert",
+    "url": "https://github.com/nicreichert"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc"
+  },
+  "dependencies": {
+    "@containrz/core": "0.1.0",
+    "@react-native-community/async-storage": "^1.12.1"
+  },
+  "peerDependencies": {
+    "react-native": ">= 0.59"
+  },
+  "devDependencies": {
+    "@types/react-native": "^0.63.50",
+    "react-native": "^0.63.4",
+    "typescript": "^3.4.4"
+  }
+}
