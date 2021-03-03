@@ -36,8 +36,6 @@ export function UseContainer<C extends ContainerType>(
       ? (container as C)
       : (findContainer(container as Class<C>) as C)
 
-    console.log(instance)
-
     target[propertyKey] = instance
 
     const { connectedCallback, disconnectedCallback } = target

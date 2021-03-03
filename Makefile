@@ -36,7 +36,6 @@ build:
 
 .PHONY: publish
 publish:
-	${MAKE} version/bump
 	${MAKE} build
 	cd packages/containrz-core && $(NPM) publish
 	cd packages/containrz-container-local-storage && $(NPM) publish
