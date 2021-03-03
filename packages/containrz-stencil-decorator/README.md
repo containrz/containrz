@@ -65,7 +65,7 @@ In case you need to create a container based on a prop, you can also register it
 
 ```js
 import { Component, VNode } from '@stencil/core'
-import { UseContainer } from '@containrz/stencil-decorator'
+import { registerContainer } from '@containrz/stencil-decorator'
 import { UserContainer } from './UserContainer'
 
 @Component({
