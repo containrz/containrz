@@ -60,3 +60,38 @@ export class MyComponent {
   }
 }
 ```
+
+In case you need to create a container based on a prop, you can also register it in a different way:
+
+```js
+import { Component, VNode } from '@stencil/core'
+import { registerContainer } from '@containrz/stencil-decorator'
+import { UserContainer } from './UserContainer'
+
+@Component({
+  tag: 'my-component',
+  styleUrl: 'my-component.css',
+  shadow: true,
+})
+export class MyComponent {
+  @Prop() userId: string
+
+  private userData: UserContainer
+
+  componentWillLoad(): void {
+    this.test = registerContainer(new UserContainer(this.userId), this)
+  }
+
+  render(): VNode {
+    return (
+      <div>
+        <input
+          value={this.userData.state.name}
+          onChange={e => this.userData.setName(e.target.value)}
+        />
+        <p>{this.userData.state.name}</p>
+      </div>
+    )
+  }
+}
+```
