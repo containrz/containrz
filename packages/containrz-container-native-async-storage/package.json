@@ -1,5 +1,5 @@
 {
-  "name": "@containrz/container-native-local-storage",
+  "name": "@containrz/container-native-async-storage",
   "version": "0.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
