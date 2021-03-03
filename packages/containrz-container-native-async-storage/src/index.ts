@@ -56,9 +56,9 @@ export class NativeLocalStorageContainer<State = any> {
         return
       }
 
-      // Object.keys(nextState).forEach(key => {
-      //   AsyncStorage.setItem(`${this.constructor.name}-${key}`, JSON.stringify(nextState[key]))
-      // })
+      Object.keys(nextState).forEach(key => {
+        AsyncStorage.setItem(`${this.constructor.name}-${key}`, JSON.stringify(nextState[key]))
+      })
 
       getEmitter(this).next(0)
     }

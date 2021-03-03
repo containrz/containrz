@@ -40,7 +40,7 @@ const usersData = getContainer(UserContainer)
 
 The way `getContainer` works is: if there's already an instance of `UserContainer`, it'll return that instance. If not, it'll create a new one, that will then be returned everytime `getContainer` is called.
 
-## Act when it metters
+## Act when it matters
 
 In order to detect everytime that the state is changed, you can use the `subscribeListener` function.
 
