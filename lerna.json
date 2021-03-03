@@ -1,6 +1,10 @@
 {
-  "version": "0.1.0",
-  "packages": ["packages/*"],
+  "version": "0.1.1",
+  "packages": [
+    "packages/*"
+  ],
   "npmClient": "yarn",
-  "npmClientArgs": ["--pure-lockfile"]
+  "npmClientArgs": [
+    "--pure-lockfile"
+  ]
 }
