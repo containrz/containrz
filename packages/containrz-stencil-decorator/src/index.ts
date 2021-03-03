@@ -7,6 +7,26 @@ import {
   isInstanceOfContainer,
 } from '@containrz/core'
 
+export function registerContainer<C extends ContainerType>(
+  container: C | Class<C>,
+  target: ComponentInterface,
+  deleteOnUnmount?: boolean,
+): C {
+  const instance = isInstanceOfContainer(container)
+    ? (container as C)
+    : (findContainer(container as Class<C>) as C)
+
+  const unsubscribe = subscribeListener(instance, () => forceUpdate(target), deleteOnUnmount)
+
+  const { disconnectedCallback } = target
+  target.disconnectedCallback = function() {
+    unsubscribe?.()
+    disconnectedCallback && disconnectedCallback.call(this)
+  }
+
+  return instance
+}
+
 export function UseContainer<C extends ContainerType>(
   container: C | Class<C>,
   deleteOnUnmount?: boolean,
@@ -15,6 +35,8 @@ export function UseContainer<C extends ContainerType>(
     const instance = isInstanceOfContainer(container)
       ? (container as C)
       : (findContainer(container as Class<C>) as C)
+
+    console.log(instance)
 
     target[propertyKey] = instance
 
