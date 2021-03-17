@@ -20,10 +20,12 @@
     "utility-types": "^3.7.0"
   },
   "peerDependencies": {
-    "@stencil/core": ">= 2.0.0"
+    "@stencil/core": ">= 2.0.0",
+    "@stencil/store": ">= 1.4.0"
   },
   "devDependencies": {
     "@stencil/core": "^2.3.0",
+    "@stencil/store": "^1.4.1",
     "typescript": "^3.4.4"
   }
 }

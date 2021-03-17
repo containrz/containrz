@@ -45,7 +45,7 @@ export const clearContainers = () => {
 
 export const subscribeListener = (
   container: ContainerType<any>,
-  listener: () => void,
+  listener: (_: any) => void,
   deleteOnUnsubscribe?: boolean,
 ) => {
   const emitter = getEmitter(container)
@@ -83,7 +83,7 @@ export class Container<State = any> {
       this.state =
         nextState instanceof Object ? Object.assign({}, this.state, nextState) : nextState
 
-      getEmitter(this).next(0)
+      getEmitter(this).next(this.state)
     }
   }
 

@@ -1,4 +1,4 @@
-import { ComponentInterface, forceUpdate } from '@stencil/core'
+import { ComponentInterface } from '@stencil/core'
 import { Class } from 'utility-types'
 import {
   subscribeListener,
@@ -6,44 +6,50 @@ import {
   ContainerType,
   isInstanceOfContainer,
 } from '@containrz/core'
+import { createStore } from '@stencil/store'
 
-export function registerContainer<C extends ContainerType>(
-  container: C | Class<C>,
-  target: ComponentInterface,
-  deleteOnUnmount?: boolean,
-): C {
-  const instance = isInstanceOfContainer(container)
-    ? (container as C)
-    : (findContainer(container as Class<C>) as C)
-
-  const unsubscribe = subscribeListener(instance, () => forceUpdate(target), deleteOnUnmount)
-
-  const { disconnectedCallback } = target
-  target.disconnectedCallback = function() {
-    unsubscribe?.()
-    disconnectedCallback && disconnectedCallback.call(this)
+function isClass(obj) {
+  const isCtorClass = obj.constructor && obj.constructor.toString().substring(0, 5) === 'class'
+  if (obj.prototype === undefined) {
+    return isCtorClass
   }
-
-  return instance
+  const isPrototypeCtorClass =
+    obj.prototype.constructor &&
+    obj.prototype.constructor.toString &&
+    obj.prototype.constructor.toString().substring(0, 5) === 'class'
+  return isCtorClass || isPrototypeCtorClass
 }
 
 export function UseContainer<C extends ContainerType>(
-  container: C | Class<C>,
+  container: ((target: ComponentInterface) => C | Class<C>) | C | Class<C>,
   deleteOnUnmount?: boolean,
 ) {
   return (target: ComponentInterface, propertyKey: string): void => {
-    const instance = isInstanceOfContainer(container)
-      ? (container as C)
-      : (findContainer(container as Class<C>) as C)
+    const cont = (isClass(container)
+      ? container
+      : (container as (target: ComponentInterface) => C | Class<C>)(target)) as C | Class<C>
 
-    target[propertyKey] = instance
+    const instance = isInstanceOfContainer(cont)
+      ? (cont as C)
+      : (findContainer(cont as Class<C>) as C)
+
+    const { state, set } = createStore(instance)
+    target[propertyKey] = state
 
     const { connectedCallback, disconnectedCallback } = target
 
     let unsubscribe
 
     target.connectedCallback = function() {
-      unsubscribe = subscribeListener(instance, () => forceUpdate(this), deleteOnUnmount)
+      unsubscribe = subscribeListener(
+        instance,
+        state => {
+          if (!isInstanceOfContainer(state)) {
+            set('state', state)
+          }
+        },
+        deleteOnUnmount,
+      )
       connectedCallback && connectedCallback.call(this)
     }
 
