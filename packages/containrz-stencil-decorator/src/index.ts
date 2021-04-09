@@ -8,30 +8,14 @@ import {
 } from '@containrz/core'
 import { createStore } from '@stencil/store'
 
-function isClass(obj) {
-  const isCtorClass = obj.constructor && obj.constructor.toString().substring(0, 5) === 'class'
-  if (obj.prototype === undefined) {
-    return isCtorClass
-  }
-  const isPrototypeCtorClass =
-    obj.prototype.constructor &&
-    obj.prototype.constructor.toString &&
-    obj.prototype.constructor.toString().substring(0, 5) === 'class'
-  return isCtorClass || isPrototypeCtorClass
-}
-
 export function UseContainer<C extends ContainerType>(
-  container: ((target: ComponentInterface) => C | Class<C>) | C | Class<C>,
+  container: C | Class<C>,
   deleteOnUnmount?: boolean,
 ) {
   return (target: ComponentInterface, propertyKey: string): void => {
-    const cont = (isClass(container)
-      ? container
-      : (container as (target: ComponentInterface) => C | Class<C>)(target)) as C | Class<C>
-
-    const instance = isInstanceOfContainer(cont)
-      ? (cont as C)
-      : (findContainer(cont as Class<C>) as C)
+    const instance = isInstanceOfContainer(container)
+      ? (container as C)
+      : (findContainer(container as Class<C>) as C)
 
     const { state, set } = createStore(instance)
     target[propertyKey] = state
@@ -58,6 +42,37 @@ export function UseContainer<C extends ContainerType>(
       disconnectedCallback && disconnectedCallback.call(this)
     }
   }
+}
+
+export function registerContainer<C extends ContainerType>(
+  container: C | Class<C>,
+  target: ComponentInterface,
+  deleteOnUnmount?: boolean,
+): C {
+  const instance = isInstanceOfContainer(container)
+    ? (container as C)
+    : (findContainer(container as Class<C>) as C)
+
+  const { state, set } = createStore(instance)
+
+  const unsubscribe = subscribeListener(
+    instance,
+    state => {
+      if (!isInstanceOfContainer(state)) {
+        set('state', state)
+      }
+    },
+    deleteOnUnmount,
+  )
+
+  const { disconnectedCallback } = target
+
+  target.disconnectedCallback = function() {
+    unsubscribe?.()
+    disconnectedCallback && disconnectedCallback.call(this)
+  }
+
+  return state
 }
 
 export * from '@containrz/core'
