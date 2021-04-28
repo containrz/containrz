@@ -43,9 +43,9 @@ export const clearContainers = () => {
   emittersMap.clear()
 }
 
-export const subscribeListener = (
-  container: ContainerType<any>,
-  listener: (_: { nextState: any; oldState: any }) => void,
+export const subscribeListener = <T>(
+  container: ContainerType<T>,
+  listener: (_: { nextState: T; oldState: T }) => void,
   deleteOnUnsubscribe?: boolean,
 ) => {
   const emitter = getEmitter(container)
@@ -84,7 +84,7 @@ export class Container<State = any> {
       this.state =
         nextState instanceof Object ? Object.assign({}, this.state, nextState) : nextState
 
-      getEmitter(this).next({ nextState, oldState })
+      getEmitter(this).next({ nextState: this.state, oldState })
     }
   }
 

@@ -32,13 +32,6 @@ describe('Test `LocalStorageContainer` class', () => {
   })
 
   it('Should set container state values and store on localStorage', () => {
-    const next = jest.fn()
-    jest.mock('@containrz/core', () => ({
-      getEmitter: (v: any) => ({
-        next: next(v),
-      }),
-    }))
-
     const container = new ObjectContainerLocalStorage()
 
     const newAge = 25

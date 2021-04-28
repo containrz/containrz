@@ -78,7 +78,7 @@ describe('`useContainer` tests', () => {
   it('Should not rerender when changed prop is not observed', () => {
     const onUpdate = jest.fn()
     const { result } = renderHook(() =>
-      useContainer(ObjectContainer, { updateForKeys: ['age'], onUpdate }),
+      useContainer(ObjectContainer, { watchKeys: ['age'], onUpdate }),
     )
     const container = result.current
 
@@ -91,7 +91,7 @@ describe('`useContainer` tests', () => {
   it('Should rerender when changed prop is observed', () => {
     const onUpdate = jest.fn()
     const { result } = renderHook(() =>
-      useContainer(ObjectContainer, { updateForKeys: ['name'], onUpdate }),
+      useContainer(ObjectContainer, { watchKeys: ['name'], onUpdate }),
     )
     const container = result.current
 
@@ -139,9 +139,7 @@ describe('`useContainer` tests', () => {
 
   it('Should not rerender when dependencies array is empty', () => {
     const onUpdate = jest.fn()
-    const { result } = renderHook(() =>
-      useContainer(ObjectContainer, { onUpdate, updateForKeys: [] }),
-    )
+    const { result } = renderHook(() => useContainer(ObjectContainer, { onUpdate, watchKeys: [] }))
     const container = result.current
 
     onUpdate.mockReset()

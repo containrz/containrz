@@ -7,25 +7,28 @@ import {
   isInstanceOfContainer,
 } from '@containrz/core'
 
-interface BaseConfig {
+interface BaseConfig<T> {
   deleteOnUnmount?: boolean
-  onUpdate?: (nextState: any) => void
+  onUpdate?: (nextState: T) => void
 }
 
-interface ConfigWithUpdater extends BaseConfig {
+interface ConfigWithUpdater<T> extends BaseConfig<T> {
   shouldTriggerUpdate?: (
     nextState: ContainerType['state'],
     oldState: ContainerType['state'],
   ) => boolean
 }
 
-interface ConfigWithKeysToObserve extends BaseConfig {
-  updateForKeys?: string[]
+interface ConfigWithKeysToObserve<T> extends BaseConfig<T> {
+  watchKeys?: Array<keyof T> //| []
 }
 
-type Config = ConfigWithKeysToObserve | ConfigWithUpdater
+type Config<T> = ConfigWithKeysToObserve<T> | ConfigWithUpdater<T>
 
-export function useContainer<C extends ContainerType>(container: C | Class<C>, config?: Config): C {
+export function useContainer<T, C extends ContainerType<T>>(
+  container: C | Class<C>,
+  config?: Config<T>,
+): C {
   const [, forceUpdate] = useState(false)
   const instance = useMemo(
     () =>
@@ -51,34 +54,35 @@ export function useContainer<C extends ContainerType>(container: C | Class<C>, c
     const unsubscribe = subscribeListener(
       instance,
       ({ nextState, oldState }) => {
-        if (isInstanceOfContainer(nextState || {})) {
+        if (isInstanceOfContainer((nextState as never) || {}) || !nextState) {
           forceUpdate(c => !c)
           return
         }
-        if (!config || !('shouldTriggerUpdate' in config || 'updateForKeys' in config)) {
+        if (!config || !('shouldTriggerUpdate' in config || 'watchKeys' in config)) {
           update(nextState)
           return
         }
 
+        // Detect if should update when using shouldTriggerUpdate resolver
         if (
           'shouldTriggerUpdate' in config &&
           config.shouldTriggerUpdate(nextState || {}, oldState || {})
         ) {
           update(nextState)
-        } else if ('updateForKeys' in config) {
-          const keys = config.updateForKeys
-
-          if (keys.length === 0) {
+        }
+        // Detect if should update when using watchKeys array
+        else if ('watchKeys' in config) {
+          if (config.watchKeys.length === 0) {
             return
           }
 
           if (
-            keys.reduce(
+            config.watchKeys.reduce(
               (acc, dep) =>
                 acc ||
-                (Boolean((nextState || {})[dep]) &&
-                  JSON.stringify((nextState || {})[dep]) !== JSON.stringify((oldState || {})[dep])),
-              false,
+                (Boolean(nextState[dep]) &&
+                  JSON.stringify(nextState[dep]) !== JSON.stringify(oldState[dep])),
+              false as never,
             )
           ) {
             update(nextState)

@@ -37,13 +37,6 @@ describe('Test `IndexedDBContainer` class', () => {
     const container = new ObjectContainerIndexedDb()
     const dbInstance = createInstance({ name: 'ObjectContainerIndexedDb' })
 
-    const next = jest.fn()
-    jest.mock('@containrz/core', () => ({
-      getEmitter: (v: any) => ({
-        next: next(v),
-      }),
-    }))
-
     // Age
     const newAge = 25
     container.setAge(25)
