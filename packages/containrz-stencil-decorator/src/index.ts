@@ -27,9 +27,9 @@ export function UseContainer<C extends ContainerType>(
     target.connectedCallback = function() {
       unsubscribe = subscribeListener(
         instance,
-        state => {
-          if (!isInstanceOfContainer(state)) {
-            set('state', state)
+        ({ nextState }) => {
+          if (!isInstanceOfContainer(nextState || {})) {
+            set('state', nextState)
           }
         },
         deleteOnUnmount,
@@ -57,9 +57,9 @@ export function registerContainer<C extends ContainerType>(
 
   const unsubscribe = subscribeListener(
     instance,
-    state => {
-      if (!isInstanceOfContainer(state)) {
-        set('state', state)
+    ({ nextState }) => {
+      if (!isInstanceOfContainer(nextState || {})) {
+        set('state', nextState)
       }
     },
     deleteOnUnmount,

@@ -45,7 +45,7 @@ export const clearContainers = () => {
 
 export const subscribeListener = (
   container: ContainerType<any>,
-  listener: (_: any) => void,
+  listener: (_: { nextState: any; oldState: any }) => void,
   deleteOnUnsubscribe?: boolean,
 ) => {
   const emitter = getEmitter(container)
@@ -80,10 +80,11 @@ export class Container<State = any> {
   public setState = (updater: Partial<State> | ((prevState: State) => Partial<State> | null)) => {
     const nextState = updater instanceof Function ? updater(this.state) : updater
     if (nextState) {
+      const oldState = this.state
       this.state =
         nextState instanceof Object ? Object.assign({}, this.state, nextState) : nextState
 
-      getEmitter(this).next(this.state)
+      getEmitter(this).next({ nextState, oldState })
     }
   }
 

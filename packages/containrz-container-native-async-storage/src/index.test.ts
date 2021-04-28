@@ -24,14 +24,6 @@ class ObjectContainerLocalStorage extends NativeLocalStorageContainer<ObjectCont
   public addItem = (item: string) => this.setState(s => ({ items: [...s.items, item] }))
 }
 
-const next = jest.fn()
-
-jest.mock('@containrz/core', () => ({
-  getEmitter: (v: any) => ({
-    next,
-  }),
-}))
-
 describe('Test `LocalStorageContainer` class', () => {
   it('Should create container with default state', () => {
     const container = new ObjectContainerLocalStorage()
@@ -40,6 +32,12 @@ describe('Test `LocalStorageContainer` class', () => {
   })
 
   it('Should set container state values and store on localStorage', () => {
+    //     const next = jest.fn()
+    // jest.mock('@containrz/core', () => ({
+    //   getEmitter: (v: any) => ({
+    //     next: next(v),
+    //   }),
+    // }))
     // const container = new ObjectContainerLocalStorage()
     // const newAge = 25
     // container.setAge(25)

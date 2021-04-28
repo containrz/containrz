@@ -24,15 +24,7 @@ class ObjectContainerIndexedDb extends IndexedDBContainer<ObjectContainerState> 
   public addItem = (item: string) => this.setState(s => ({ items: [...s.items, item] }))
 }
 
-const next = jest.fn()
-
 const flushPromises = () => new Promise(setImmediate)
-
-jest.mock('@containrz/core', () => ({
-  getEmitter: (v: any) => ({
-    next,
-  }),
-}))
 
 describe('Test `IndexedDBContainer` class', () => {
   it('Should create container with default state', () => {
@@ -44,6 +36,13 @@ describe('Test `IndexedDBContainer` class', () => {
   it('Should set container state values and store on localStorage', async () => {
     const container = new ObjectContainerIndexedDb()
     const dbInstance = createInstance({ name: 'ObjectContainerIndexedDb' })
+
+    const next = jest.fn()
+    jest.mock('@containrz/core', () => ({
+      getEmitter: (v: any) => ({
+        next: next(v),
+      }),
+    }))
 
     // Age
     const newAge = 25
