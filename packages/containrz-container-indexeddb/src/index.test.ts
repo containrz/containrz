@@ -24,15 +24,7 @@ class ObjectContainerIndexedDb extends IndexedDBContainer<ObjectContainerState> 
   public addItem = (item: string) => this.setState(s => ({ items: [...s.items, item] }))
 }
 
-const next = jest.fn()
-
 const flushPromises = () => new Promise(setImmediate)
-
-jest.mock('@containrz/core', () => ({
-  getEmitter: (v: any) => ({
-    next,
-  }),
-}))
 
 describe('Test `IndexedDBContainer` class', () => {
   it('Should create container with default state', () => {

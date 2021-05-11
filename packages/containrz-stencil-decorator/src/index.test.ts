@@ -1,23 +1,19 @@
 import { ComponentInterface } from '@stencil/core'
-import { Container } from '@containrz/core'
+import { Container } from '../../containrz-core/src'
 import { UseContainer } from '.'
 
-interface ObjectContainerState {
-  name: string
-  age: number
-  items: Array<string>
-}
-
-const defaultState: ObjectContainerState = {
+const defaultState = {
   name: '',
   age: 0,
   items: [] as string[],
 }
 
-class ObjectContainerLocalStorage extends Container<ObjectContainerState> {
-  state = {
-    ...defaultState,
-  }
+class ObjectContainer extends Container<{
+  name: string
+  age: number
+  items: Array<string>
+}> {
+  state = defaultState
 
   setName = (name: string) => this.setState({ name })
 
@@ -25,14 +21,6 @@ class ObjectContainerLocalStorage extends Container<ObjectContainerState> {
 
   addItem = (item: string) => this.setState(s => ({ items: [...s.items, item] }))
 }
-
-const next = jest.fn()
-
-jest.mock('@containrz/core', () => ({
-  getEmitter: (v: any) => ({
-    next,
-  }),
-}))
 
 describe('UseContainer decorator tests', () => {
   it('renders', async () => {
@@ -45,7 +33,7 @@ describe('UseContainer decorator tests', () => {
       disconnectedCallback: disconnected,
     }
 
-    UseContainer(ObjectContainerLocalStorage, true)(target, 'testContainer')
+    UseContainer(ObjectContainer, true)(target, 'testContainer')
 
     expect(target.testContainer).toBeDefined()
   })

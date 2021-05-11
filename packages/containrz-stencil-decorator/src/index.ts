@@ -8,7 +8,7 @@ import {
 } from '@containrz/core'
 import { createStore } from '@stencil/store'
 
-export function UseContainer<C extends ContainerType>(
+export function UseContainer<T, C extends ContainerType<T>>(
   container: C | Class<C>,
   deleteOnUnmount?: boolean,
 ) {
@@ -27,9 +27,9 @@ export function UseContainer<C extends ContainerType>(
     target.connectedCallback = function() {
       unsubscribe = subscribeListener(
         instance,
-        state => {
-          if (!isInstanceOfContainer(state)) {
-            set('state', state)
+        ({ nextState }) => {
+          if (!isInstanceOfContainer((nextState as never) || {})) {
+            set('state', nextState)
           }
         },
         deleteOnUnmount,
@@ -44,7 +44,7 @@ export function UseContainer<C extends ContainerType>(
   }
 }
 
-export function registerContainer<C extends ContainerType>(
+export function registerContainer<T, C extends ContainerType<T>>(
   container: C | Class<C>,
   target: ComponentInterface,
   deleteOnUnmount?: boolean,
@@ -57,9 +57,9 @@ export function registerContainer<C extends ContainerType>(
 
   const unsubscribe = subscribeListener(
     instance,
-    state => {
-      if (!isInstanceOfContainer(state)) {
-        set('state', state)
+    ({ nextState }) => {
+      if (!isInstanceOfContainer((nextState as never) || {})) {
+        set('state', nextState)
       }
     },
     deleteOnUnmount,

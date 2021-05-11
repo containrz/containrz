@@ -1,7 +1,7 @@
 import { renderHook, act } from '@testing-library/react-hooks'
-import { clearContainers, Container } from '@containrz/core'
-import { LocalStorageContainer } from '../../containrz-container-local-storage'
+import { clearContainers, Container } from '../../containrz-core/src'
 import { useContainer } from './'
+import * as React from 'react'
 
 /**
  *  Tests for simple container
@@ -41,29 +41,14 @@ class ObjectContainer extends Container<ObjectContainerState> {
   public addItem = (item: string) => this.setState(s => ({ items: [...s.items, item] }))
 }
 
-class ObjectContainerLocalStorage extends LocalStorageContainer<ObjectContainerState> {
-  constructor() {
-    super({
-      name: '',
-      age: 0,
-      items: [] as string[],
-    })
-  }
-
-  public setName = (name: string) => this.setState({ name })
-
-  public setAge = (age: number) => this.setState({ age })
-
-  public addItem = (item: string) => this.setState(s => ({ items: [...s.items, item] }))
-}
+jest.mock('@containrz/core', () => {
+  const containrz = require('../../containrz-core/src')
+  return containrz
+})
 
 describe('`useContainer` tests', () => {
   beforeEach(() => {
     clearContainers()
-  })
-
-  afterAll(() => {
-    localStorage.clear()
   })
 
   it('Sets num', () => {
@@ -90,43 +75,87 @@ describe('`useContainer` tests', () => {
     expect(container.state.items.length).toBe(1)
   })
 
-  it('Updates state with complex object and stores to localStorage', () => {
-    const { result } = renderHook(() => useContainer(ObjectContainerLocalStorage))
+  it('Should not rerender when changed prop is not observed', () => {
+    const onUpdate = jest.fn()
+    const { result } = renderHook(() =>
+      useContainer(ObjectContainer, { watchKeys: ['age'], onUpdate }),
+    )
     const container = result.current
 
+    onUpdate.mockReset()
     act(() => container.setName('Nic'))
-    expect(container.state.name).toBe('Nic')
-    expect(localStorage.getItem('ObjectContainerLocalStorage-name')).toBe(JSON.stringify('Nic'))
 
-    act(() => container.addItem('Ball'))
-    expect(container.state.items.length).toBe(1)
-    expect(localStorage.getItem('ObjectContainerLocalStorage-items')).toBe(JSON.stringify(['Ball']))
+    expect(onUpdate).not.toHaveBeenCalled()
   })
 
-  it('Loads state with local storage.', () => {
-    const { result } = renderHook(() => useContainer(ObjectContainerLocalStorage))
+  it('Should rerender when changed prop is observed', () => {
+    const onUpdate = jest.fn()
+    const { result } = renderHook(() =>
+      useContainer(ObjectContainer, { watchKeys: ['name'], onUpdate }),
+    )
     const container = result.current
 
-    // since age wasn't set before,
-    // value should be the one set by default state
-    expect(container.state.age).toBe(0)
-    expect(localStorage.getItem('ObjectContainerLocalStorage-age')).toBeNull
+    onUpdate.mockReset()
+    act(() => container.setName('Nic'))
 
-    expect(container.state.name).toBe('Nic')
-    expect(localStorage.getItem('ObjectContainerLocalStorage-name')).toBe(JSON.stringify('Nic'))
-
-    expect(container.state.items.length).toBe(1)
-    expect(localStorage.getItem('ObjectContainerLocalStorage-items')).toBe(JSON.stringify(['Ball']))
+    expect(onUpdate).toHaveBeenCalled()
   })
 
-  it('Should call destroy.', () => {
-    const { result } = renderHook(() => useContainer(ObjectContainerLocalStorage))
+  it('Should not rerender when rerenderer returns false', () => {
+    const updater = jest.fn()
+    const onUpdate = jest.fn()
+    const { result } = renderHook(() =>
+      useContainer(ObjectContainer, {
+        shouldTriggerUpdate: updater.mockImplementation(() => false),
+        onUpdate,
+      }),
+    )
     const container = result.current
 
-    container.destroy = jest.fn()
+    onUpdate.mockReset()
+    act(() => container.setName('Nic'))
 
-    clearContainers()
+    expect(updater).toHaveBeenCalled()
+    expect(onUpdate).not.toHaveBeenCalled()
+  })
 
-    expect(container.destroy).toHaveBeenCalled()
+  it('Should rerender when rerenderer returns true', () => {
+    const updater = jest.fn()
+    const onUpdate = jest.fn()
+    const { result } = renderHook(() =>
+      useContainer(ObjectContainer, {
+        shouldTriggerUpdate: updater.mockImplementation(() => true),
+        onUpdate,
+      }),
+    )
+    const container = result.current
+
+    onUpdate.mockReset()
+    act(() => container.setName('Nic'))
+
+    expect(updater).toHaveBeenCalled()
+    expect(onUpdate).toHaveBeenCalled()
+  })
+
+  it('Should not rerender when dependencies array is empty', () => {
+    const onUpdate = jest.fn()
+    const { result } = renderHook(() => useContainer(ObjectContainer, { onUpdate, watchKeys: [] }))
+    const container = result.current
+
+    onUpdate.mockReset()
+    act(() => container.setName('Nic'))
+
+    expect(onUpdate).not.toHaveBeenCalled()
+  })
+
+  it('Should rerender when no dependencies are set', () => {
+    const onUpdate = jest.fn()
+    const { result } = renderHook(() => useContainer(ObjectContainer, { onUpdate }))
+    const container = result.current
+
+    onUpdate.mockReset()
+    act(() => container.setName('Nic'))
+
+    expect(onUpdate).toHaveBeenCalled()
   })
 })
