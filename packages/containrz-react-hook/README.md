@@ -78,12 +78,22 @@ export const App = () => {
 
 ```
 
-If your state should be exclusively local, and you want to make sure it cease to exist after your component unmounts, you can pass a second parameter to the `useContainer` hook, to delete the created container on unmount.
+In order to configure the behaviour of your local container instance, you can make use of a configuration object as a second parameter.
 
 ```js
 export const App = () => {
-  const[localUser] = React.useState(new UserContainer())
-  const user = useContainer(localUser, true) // delete container on unmount
+  const [localUser] = React.useState(new UserContainer())
+  const user = useContainer(localUser, {
+    // whether or not you want the container to be deleted when component unmounts.
+    deleteOnUnmount: true,
+    // receive a callback with the new state when there's a change
+    onUpdate: (nextState) => {},
+    // a function to resolve whether or not the changes to the state should trigger a rerender
+    shouldTriggerUpdate: (prevState, nextState) => false,
+    // An array of keys of the state object that, when changed, triggers a rerender
+    // If it's an empty array, it never rerenders.
+    watchKeys: ['name'],
+  })
 
   return (
     // ...
@@ -91,6 +101,8 @@ export const App = () => {
 }
 
 ```
+
+Note that the options object only acept one option between `shouldTriggerUpdate` and `watchKeys`.
 
 ## Other ways to store your state
 
