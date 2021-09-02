@@ -10,15 +10,20 @@ export class LocalStorageContainer<State = any> {
     }
 
     const keys = Object.keys(localStorage).filter(
-      key => key.startsWith(`${this.constructor.name}-`) && localStorage.getItem(key) !== null
+      key =>
+        key.startsWith(`${this.constructor.name}-`) &&
+        localStorage.getItem(key) !== null &&
+        localStorage.getItem(key) !== 'undefined',
     )
 
     const storedState = keys.reduce(
       (acc, key) => ({
         ...acc,
-        [key.split('-')[1]]: JSON.parse(localStorage.getItem(key) || 'null'),
+        [key.split('-')[1]]: JSON.parse(
+          localStorage.getItem(key) !== 'undefined' ? localStorage.getItem(key) : 'null',
+        ),
       }),
-      {}
+      {},
     ) as State
 
     this.state = Object.assign({}, state, storedState)
@@ -36,12 +41,19 @@ export class LocalStorageContainer<State = any> {
       }
 
       Object.keys(nextState).forEach(key => {
-        localStorage.setItem(`${this.constructor.name}-${key}`, JSON.stringify(nextState[key]))
+        localStorage.setItem(
+          `${this.constructor.name}-${key}`,
+          JSON.stringify(nextState[key] || null),
+        )
       })
 
       getEmitter(this).next(0)
     }
   }
 
-  public destroy = () => {}
+  public destroy = () => {
+    Object.keys(this.state).forEach(key => {
+      localStorage.removeItem(`${this.constructor.name}-${key}`)
+    })
+  }
 }
