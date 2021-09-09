@@ -9,12 +9,13 @@ export class LocalStorageContainer<State = any> {
       return
     }
 
-    const keys = Object.keys(localStorage).filter(
-      key =>
-        key.startsWith(`${this.constructor.name}-`) &&
-        localStorage.getItem(key) !== null &&
-        localStorage.getItem(key) !== 'undefined',
-    )
+    const keys = Object.keys(localStorage).filter(key => {
+      const keyVal = localStorage.getItem(key)
+
+      return (
+        key.startsWith(`${this.constructor.name}-`) && ![null, 'undefined', ''].includes(keyVal)
+      )
+    })
 
     const storedState = keys.reduce(
       (acc, key) => ({
