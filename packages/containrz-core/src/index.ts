@@ -55,20 +55,36 @@ export const subscribeListener = <T>(
     sub.unsubscribe()
 
     if (deleteOnUnsubscribe) {
-      container.destroy()
-      container.__destroyInternalCleanup && container.__destroyInternalCleanup()
-      emittersMap.delete(container)
+      deleteContainer(container)
     }
   }
 }
 
 export const deleteContainer = <C extends ContainerType>(container: C | Class<C>) => {
-  const c = isInstanceOfContainer(container)
-    ? (container as C)
-    : findContainer(container as Class<C>)
+  const c = getContainer(container)
+
+  Array.from(containersMap.keys()).forEach(key => {
+    const cnt = getContainer(key)
+
+    if (cnt === c) {
+      containersMap.delete(key)
+    }
+  })
+
+  // const entries = containersMap.entries()
+  // let entry = entries.next()
+  // while (Boolean(entry)) {
+  //   if ([entry[0], entry[1]].some(e => e == c)) {
+  //     containersMap.delete(entry[0])
+  //   }
+
+  //   entry = entries.next()
+  // }
 
   emittersMap.delete(c)
+
   c.destroy()
+  c.__destroyInternalCleanup && c.__destroyInternalCleanup()
 }
 
 export const getContainer = <C extends ContainerType>(container: C | Class<C>): C =>

@@ -20,7 +20,7 @@ interface ConfigWithUpdater<T> extends BaseConfig<T> {
 }
 
 interface ConfigWithKeysToObserve<T> extends BaseConfig<T> {
-  watchKeys?: Array<keyof T> //| []
+  watchKeys?: Array<keyof T>
 }
 
 type Config<T> = ConfigWithKeysToObserve<T> | ConfigWithUpdater<T>
