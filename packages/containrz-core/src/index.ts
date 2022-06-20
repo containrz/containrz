@@ -71,16 +71,6 @@ export const deleteContainer = <C extends ContainerType>(container: C | Class<C>
     }
   })
 
-  // const entries = containersMap.entries()
-  // let entry = entries.next()
-  // while (Boolean(entry)) {
-  //   if ([entry[0], entry[1]].some(e => e == c)) {
-  //     containersMap.delete(entry[0])
-  //   }
-
-  //   entry = entries.next()
-  // }
-
   emittersMap.delete(c)
 
   c.destroy()
@@ -91,7 +81,14 @@ export const getContainer = <C extends ContainerType>(container: C | Class<C>): 
   isInstanceOfContainer(container) ? (container as C) : (findContainer(container as Class<C>) as C)
 
 export class Container<State = any> {
+  private animationFrame: number
   public state!: State
+
+  private __internal__updateState = (nextState: any, oldState: any) => () => {
+    getEmitter(this).next({ nextState, oldState })
+
+    this.animationFrame = undefined
+  }
 
   public setState = (updater: Partial<State> | ((prevState: State) => Partial<State> | null)) => {
     const nextState = updater instanceof Function ? updater(this.state) : updater
@@ -100,7 +97,17 @@ export class Container<State = any> {
       this.state =
         nextState instanceof Object ? Object.assign({}, this.state, nextState) : nextState
 
-      getEmitter(this).next({ nextState: this.state, oldState })
+      if (window?.requestAnimationFrame) {
+        if (this.animationFrame) {
+          window.cancelAnimationFrame(this.animationFrame)
+        }
+
+        this.animationFrame = window.requestAnimationFrame(
+          this.__internal__updateState(this.state, oldState),
+        )
+      } else {
+        this.__internal__updateState(this.state, oldState)
+      }
     }
   }
 

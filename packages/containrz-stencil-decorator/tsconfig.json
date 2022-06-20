@@ -4,9 +4,10 @@
     "moduleResolution": "node",
     "target": "es5",
     "outDir": "./dist",
-    "lib": ["es5", "es2015", "dom"],
-    "declaration": true
+    "lib": ["es2016", "es5", "es2015", "dom"],
+    "declaration": true,
+    "types": []
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts"]
+  "exclude": ["node_modules", "../../node_modules", "dist", "**/*.test.ts"]
 }

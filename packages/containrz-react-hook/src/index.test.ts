@@ -47,6 +47,14 @@ jest.mock('@containrz/core', () => {
 })
 
 describe('`useContainer` tests', () => {
+  beforeAll(() => {
+    jest
+      .spyOn(window, 'requestAnimationFrame')
+      .mockImplementation((cb: any) => window.setTimeout(cb as () => void, 0))
+
+    jest.useFakeTimers()
+  })
+
   beforeEach(() => {
     clearContainers()
   })
@@ -85,6 +93,8 @@ describe('`useContainer` tests', () => {
     onUpdate.mockReset()
     act(() => container.setName('Nic'))
 
+    jest.runAllTimers()
+
     expect(onUpdate).not.toHaveBeenCalled()
   })
 
@@ -97,6 +107,8 @@ describe('`useContainer` tests', () => {
 
     onUpdate.mockReset()
     act(() => container.setName('Nic'))
+
+    jest.runAllTimers()
 
     expect(onUpdate).toHaveBeenCalled()
   })
@@ -114,6 +126,8 @@ describe('`useContainer` tests', () => {
 
     onUpdate.mockReset()
     act(() => container.setName('Nic'))
+
+    jest.runAllTimers()
 
     expect(updater).toHaveBeenCalled()
     expect(onUpdate).not.toHaveBeenCalled()
@@ -133,6 +147,8 @@ describe('`useContainer` tests', () => {
     onUpdate.mockReset()
     act(() => container.setName('Nic'))
 
+    jest.runAllTimers()
+
     expect(updater).toHaveBeenCalled()
     expect(onUpdate).toHaveBeenCalled()
   })
@@ -145,6 +161,8 @@ describe('`useContainer` tests', () => {
     onUpdate.mockReset()
     act(() => container.setName('Nic'))
 
+    jest.runAllTimers()
+
     expect(onUpdate).not.toHaveBeenCalled()
   })
 
@@ -155,6 +173,8 @@ describe('`useContainer` tests', () => {
 
     onUpdate.mockReset()
     act(() => container.setName('Nic'))
+
+    jest.runAllTimers()
 
     expect(onUpdate).toHaveBeenCalled()
   })
