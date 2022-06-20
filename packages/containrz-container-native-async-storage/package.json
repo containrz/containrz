@@ -1,6 +1,6 @@
 {
   "name": "@containrz/container-native-async-storage",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
@@ -16,7 +16,7 @@
     "build": "rm -rf dist && tsc"
   },
   "dependencies": {
-    "@containrz/core": "^0.2.3",
+    "@containrz/core": "^0.2.4",
     "@react-native-community/async-storage": "^1.12.1"
   },
   "peerDependencies": {
