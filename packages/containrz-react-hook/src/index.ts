@@ -66,22 +66,22 @@ export function useContainer<T, C extends ContainerType<T>>(
         // Detect if should update when using shouldTriggerUpdate resolver
         if (
           'shouldTriggerUpdate' in config &&
-          config.shouldTriggerUpdate(nextState || {}, oldState || {})
+          config.shouldTriggerUpdate?.(nextState || {}, oldState || {})
         ) {
           update(nextState)
         }
         // Detect if should update when using watchKeys array
         else if ('watchKeys' in config) {
-          if (config.watchKeys.length === 0) {
+          if (config.watchKeys?.length === 0) {
             return
           }
 
           if (
-            config.watchKeys.reduce(
+            config.watchKeys?.reduce(
               (acc, dep) =>
                 acc ||
-                (Boolean(nextState[dep]) &&
-                  JSON.stringify(nextState[dep]) !== JSON.stringify(oldState[dep])),
+                ((Boolean(nextState?.[dep]) &&
+                  JSON.stringify(nextState?.[dep]) !== JSON.stringify(oldState?.[dep])) as never),
               false as never,
             )
           ) {

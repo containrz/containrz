@@ -22,7 +22,7 @@ export function UseContainer<T, C extends ContainerType<T>>(
 
     const { connectedCallback, disconnectedCallback } = target
 
-    let unsubscribe
+    let unsubscribe: (() => void) | undefined = undefined
 
     target.connectedCallback = function() {
       unsubscribe = subscribeListener(

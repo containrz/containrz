@@ -11,6 +11,10 @@ export class NativeLocalStorageContainer<State = any> {
     }
 
     AsyncStorage.getAllKeys(async (_, keys) => {
+      if (!keys) {
+        return
+      }
+
       // when there are new values not yet stored, store default value
       if (keys.length !== Object.keys(this.state).length) {
         this.setItems(
@@ -19,7 +23,7 @@ export class NativeLocalStorageContainer<State = any> {
             .reduce(
               (acc, key) => ({
                 ...acc,
-                [key]: this.state[key],
+                [key]: this.state[key as keyof State],
               }),
               {},
             ),
@@ -31,7 +35,7 @@ export class NativeLocalStorageContainer<State = any> {
         return
       }
 
-      const storedState = {}
+      const storedState = {} as any
       await Promise.all(
         keys.map(key =>
           AsyncStorage.getItem(key).then(item => {
@@ -57,7 +61,10 @@ export class NativeLocalStorageContainer<State = any> {
       }
 
       Object.keys(nextState).forEach(key => {
-        AsyncStorage.setItem(`${this.constructor.name}-${key}`, JSON.stringify(nextState[key]))
+        AsyncStorage.setItem(
+          `${this.constructor.name}-${key}`,
+          JSON.stringify(nextState[key as keyof State]),
+        )
       })
 
       getEmitter(this).next(0)
@@ -68,6 +75,6 @@ export class NativeLocalStorageContainer<State = any> {
 
   private setItems = (state: Partial<State>) =>
     Object.keys(state).forEach(key => {
-      AsyncStorage.setItem(key, JSON.stringify(state[key]))
+      AsyncStorage.setItem(key, JSON.stringify(state[key as keyof State]))
     })
 }

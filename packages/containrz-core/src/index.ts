@@ -81,7 +81,7 @@ export const getContainer = <C extends ContainerType>(container: C | Class<C>): 
   isInstanceOfContainer(container) ? (container as C) : (findContainer(container as Class<C>) as C)
 
 export class Container<State = any> {
-  private animationFrame: number
+  private animationFrame: number | undefined = undefined
   public state!: State
 
   private __internal__updateState = (nextState: any, oldState: any) => () => {

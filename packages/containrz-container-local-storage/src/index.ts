@@ -18,9 +18,10 @@ export class LocalStorageContainer<State = any> {
     })
 
     const storedState = keys.reduce(
-      (acc, key) => ({
+      (acc, key: string) => ({
         ...acc,
         [key.split('-')[1]]: JSON.parse(
+          // @ts-ignore
           localStorage.getItem(key) !== 'undefined' ? localStorage.getItem(key) : 'null',
         ),
       }),
@@ -44,7 +45,7 @@ export class LocalStorageContainer<State = any> {
       Object.keys(nextState).forEach(key => {
         localStorage.setItem(
           `${this.constructor.name}-${key}`,
-          JSON.stringify(nextState[key] || null),
+          JSON.stringify(nextState[key as keyof State] || null),
         )
       })
 

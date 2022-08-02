@@ -21,10 +21,10 @@ export class IndexedDBContainer<State = any> {
             .reduce(
               (acc, key) => ({
                 ...acc,
-                [key]: this.state[key],
+                [key]: this.state[key as keyof State],
               }),
-              {}
-            )
+              {},
+            ),
         )
       }
 
@@ -33,13 +33,13 @@ export class IndexedDBContainer<State = any> {
         return
       }
 
-      const storedState = {}
+      const storedState = {} as any
       await Promise.all(
         keys.map(key =>
           this.instance.getItem(key).then(item => {
             storedState[key] = item
-          })
-        )
+          }),
+        ),
       )
 
       this.state = Object.assign({}, this.state, storedState) as State
@@ -61,7 +61,7 @@ export class IndexedDBContainer<State = any> {
 
   private setItems = (state: Partial<State>) =>
     Object.keys(state).forEach(key => {
-      this.instance.setItem(key, state[key])
+      this.instance.setItem(key, state[key as keyof State])
     })
 
   public destroy = () => {}
