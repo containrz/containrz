@@ -81,14 +81,7 @@ export const getContainer = <C extends ContainerType>(container: C | Class<C>): 
   isInstanceOfContainer(container) ? (container as C) : (findContainer(container as Class<C>) as C)
 
 export class Container<State = any> {
-  // private animationFrame: number | undefined = undefined
   public state!: State
-
-  private __internal__updateState = (nextState: any, oldState: any) => () => {
-    getEmitter(this).next({ nextState, oldState })
-
-    // this.animationFrame = undefined
-  }
 
   public setState = (updater: Partial<State> | ((prevState: State) => Partial<State> | null)) => {
     const nextState = updater instanceof Function ? updater(this.state) : updater
@@ -96,18 +89,7 @@ export class Container<State = any> {
       const oldState = this.state
       this.state =
         nextState instanceof Object ? Object.assign({}, this.state, nextState) : nextState
-
-      // if (window?.requestAnimationFrame) {
-      //   if (this.animationFrame) {
-      //     window.cancelAnimationFrame(this.animationFrame)
-      //   }
-
-      //   this.animationFrame = window.requestAnimationFrame(
-      //     this.__internal__updateState(this.state, oldState),
-      //   )
-      // } else {
-      this.__internal__updateState(this.state, oldState)
-      // }
+      getEmitter(this).next({ nextState: this.state, oldState })
     }
   }
 
