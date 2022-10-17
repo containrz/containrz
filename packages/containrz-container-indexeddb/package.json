@@ -1,6 +1,6 @@
 {
   "name": "@containrz/container-indexeddb",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "main": "./dist/cjs/index.js",
   "module": "./dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,7 +20,7 @@
     "build": "rm -rf dist && tsc -p ./tsconfig.json && tsc -p ./tsconfig-cjs.json"
   },
   "dependencies": {
-    "@containrz/core": "^0.2.5",
+    "@containrz/core": "^0.2.6",
     "localforage": "^1.9.0"
   },
   "devDependencies": {
