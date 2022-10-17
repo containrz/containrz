@@ -1,6 +1,6 @@
 {
   "name": "@containrz/react-hook",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "main": "./dist/cjs/index.js",
   "module": "./dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,7 +20,7 @@
     "build": "rm -rf dist && tsc -p ./tsconfig.json && tsc -p ./tsconfig-cjs.json"
   },
   "dependencies": {
-    "@containrz/core": "^0.2.6",
+    "@containrz/core": "^0.2.7",
     "utility-types": "^3.7.0"
   },
   "peerDependencies": {
